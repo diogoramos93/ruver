@@ -54,3 +54,11 @@ php artisan optimize:clear && php artisan config:cache && php artisan route:cach
 
 Esse ciclo inteiro é o que você vai repetir no dia a dia.
 -----------------//------
+
+
+2. Emergência: desfazer a última versão (ruver_v5 $\rightarrow$ ruver_v4)No seu Mac (terminal do VS Code):Liste os últimos commits para pegar o código de 7 letras da versão com erro:Bashgit log --oneline -n 5
+Desfaça aquele commit específico e envie para o GitHub (troque CODIGO pelo código de 7 letras):Bashgit revert CODIGO --no-edit
+git push origin main
+No servidor de produção (na pasta do projeto):Puxe a restauração e limpe o cache:Bashgit pull origin main
+php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache
+3. Limpar testes locais antes de fazer commitSe mexeu nos arquivos no seu Mac, ainda não deu git commit e quer descartar tudo o que alterou:Bashgit checkout -- .
