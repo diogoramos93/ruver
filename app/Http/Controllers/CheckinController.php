@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderParticipant;
+use App\Models\Organizer;
 use Illuminate\Http\Request;
 
 class CheckinController extends Controller
@@ -20,6 +21,23 @@ class CheckinController extends Controller
 
         if (!$participant) {
             return response("<h1 style='color:red; text-align:center; font-family:sans-serif; margin-top:50px;'>❌ Ingresso não encontrado!</h1>", 404);
+        }
+
+        // 2.1. Se for organizador (não admin), valida se o evento pertence a ele
+        if ($user->role === 'organizador') {
+            $organizer = $user->organizer;
+            if (!$organizer) {
+                $organizer = Organizer::where('user_id', $user->id)->first();
+            }
+            if (!$organizer && !empty($user->email)) {
+                $organizer = Organizer::where('email', $user->email)->first();
+            }
+
+            $eventOrganizerId = $participant->order?->ticket?->event?->organizer_id;
+
+            if (!$organizer || !$eventOrganizerId || (int)$eventOrganizerId !== (int)$organizer->id) {
+                return response("<h1 style='color:red; text-align:center; font-family:sans-serif; margin-top:50px;'>❌ Ingresso não encontrado ou sem permissão.</h1>", 403);
+            }
         }
 
         // 3. Verifica se o documento (CPF ou Passaporte) bate com o QR Code
