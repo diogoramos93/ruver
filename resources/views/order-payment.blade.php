@@ -88,7 +88,7 @@
                     <div class="text-center mb-4">
                         <p class="text-xs font-bold text-gray-600">Este QR Code expira em:</p>
                         <div class="text-3xl font-mono font-extrabold text-red-600 mt-1" id="pix-timer">
-                            05:00
+                            15:00
                         </div>
                     </div>
 
@@ -186,8 +186,8 @@
     <!-- Script da Mágica (Polling + Cronômetro Real) - AGORA SÓ RODA SE FOR PIX! -->
     @if($order->status === 'pendente' && ($formaPagamento === 'PIX' || !$formaPagamento))
     <script>
-        // Pega a data de expiração REAL gerada pelo servidor (Criado em + 5 minutos)
-        const expirationTime = new Date("{{ $order->created_at->addMinutes(5)->toIso8601String() }}").getTime();
+        // Pega a data de expiração REAL gerada pelo servidor (Criado em + 15 minutos)
+        const expirationTime = new Date("{{ $order->created_at->addMinutes(15)->toIso8601String() }}").getTime();
         const timerDisplay = document.getElementById('pix-timer');
 
         // 1. Cronômetro Visual (Roda a cada 1 segundo)
