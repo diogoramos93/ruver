@@ -176,6 +176,7 @@ flowchart TD
   2. Escanear o QR Code gerado na tela com a câmera do celular.
   3. A URL aberta é `dominio.com/{id}/{cpf}`, que não existe e retorna página 404 (Not Found).
 - **Impacto:** Parada total na operação de portaria no dia do evento. Nenhum ingresso impresso por esta tela poderá ser validado por leitura de QR Code.
+DIOGO
 
 ---
 
