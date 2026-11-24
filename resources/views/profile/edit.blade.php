@@ -19,7 +19,7 @@
                 </a>
 
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('cliente.dashboard') }}" class="text-sm font-semibold text-gray-300 hover:text-white transition">← Início</a>
+                    <a href="{{ route('dashboard') }}" class="text-sm font-semibold text-gray-300 hover:text-white transition">← Início</a>
                 </div>
             </div>
         </nav>
