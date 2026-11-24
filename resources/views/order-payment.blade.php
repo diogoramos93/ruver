@@ -72,13 +72,44 @@
                     <span class="text-xs font-bold text-sky-600">{{ $order->quantidade }}x {{ $order->ticket->nome }}</span>
                 </div>
                 <div class="flex justify-between items-center pt-1">
-                    <span class="text-sm font-bold text-gray-900">Total a Pagar</span>
+                    <span class="text-sm font-bold text-gray-900">{{ $order->status === 'pago' ? 'Total Pago' : ($order->status === 'cancelado' || $order->status === 'expirado' ? 'Valor do Pedido' : 'Total a Pagar') }}</span>
                     <span class="text-2xl font-extrabold text-emerald-600 font-mono">R$ {{ number_format($order->valor_total, 2, ',', '.') }}</span>
                 </div>
             </div>
 
-            <!-- OPÇÃO 1: PIX -->
-            @if($formaPagamento === 'PIX' || !$formaPagamento)
+            @if($order->status === 'cancelado' || $order->status === 'expirado')
+                <!-- AVISO DE PEDIDO CANCELADO / EXPIRADO -->
+                <div class="space-y-6 text-center py-4">
+                    <div class="bg-red-50 border border-red-200 rounded-2xl p-6 text-red-800 space-y-3 max-w-md mx-auto shadow-sm">
+                        <span class="text-4xl">⏰</span>
+                        <h2 class="text-base font-extrabold text-red-900">Tempo de pagamento esgotado</h2>
+                        <p class="text-xs text-red-700">Este pedido foi cancelado e os ingressos voltaram ao estoque.</p>
+                        @if($order->ticket && $order->ticket->event)
+                            <div class="pt-2">
+                                <a href="{{ route('event.show', $order->ticket->event->slug ?? $order->ticket->event->id) }}" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow-md">
+                                    Inscrever-se Novamente
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @elseif($order->status === 'pago')
+                <!-- AVISO DE PEDIDO JÁ PAGO -->
+                <div class="space-y-6 text-center py-4">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-emerald-800 space-y-3 max-w-md mx-auto shadow-sm">
+                        <span class="text-4xl">🎉</span>
+                        <h2 class="text-base font-extrabold text-emerald-900">Pagamento Confirmado!</h2>
+                        <p class="text-xs text-emerald-700">Este pedido já foi aprovado e seus ingressos estão disponíveis.</p>
+                        <div class="pt-2">
+                            <a href="{{ route('my.tickets') }}" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-xl transition shadow-md">
+                                Ver Meus Ingressos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <!-- OPÇÃO 1: PIX -->
+                @if($formaPagamento === 'PIX' || !$formaPagamento)
                 <div class="space-y-6 text-center">
                     <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-emerald-800 text-xs font-semibold">
                         Escaneie o QR Code ou copie o código Pix abaixo para realizar o pagamento instantâneo.
@@ -170,6 +201,7 @@
                         <p class="text-xs text-gray-500">Você receberá um e-mail de confirmação assim que o pagamento for aprovado pelo banco. Seus ingressos ficarão disponíveis na aba "Meus Ingressos".</p>
                     </div>
                 </div>
+            @endif
             @endif
 
             <!-- BOTÃO DE VOLTAR APENAS -->
