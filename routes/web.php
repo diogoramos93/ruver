@@ -258,23 +258,3 @@ Route::post('/webhook/asaas', [\App\Http\Controllers\WebhookAsaasController::cla
 
 require __DIR__ . '/auth.php';
 
-// Rota de Instalação (Desativada por segurança para proteger o banco de produção)
-// Route::get('/instalar-sistema', function (Request $request) {
-//     if ($request->query('token') !== 'minha-senha-secreta-123') {
-//         return response('Acesso negado. Token inválido.', 403);
-//     }
-//     try {
-//         Artisan::call('optimize:clear');
-//         $output = "Cache limpo...<br>";
-//         Artisan::call('storage:link');
-//         $output .= "Pasta de imagens vinculada...<br>";
-//         Artisan::call('migrate:fresh', [
-//             '--force' => true,
-//             '--seed' => true
-//         ]);
-//         $output .= "Banco de dados recriado e zerado com sucesso!...<br>";
-//         return $output . "<br><h2 style='color:green'>INSTALAÇÃO CONCLUÍDA! 🎉</h2><br><strong style='color:red'>⚠️ APAGUE ESSA ROTA DEPOIS!</strong>";
-//     } catch (\Exception $e) {
-//         return "Erro durante a instalação: " . $e->getMessage();
-//     }
-// });
