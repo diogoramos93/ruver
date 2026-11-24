@@ -109,7 +109,7 @@ Realizamos uma varredura para garantir que as alterações não introduziram nov
    - Como a plataforma opera em modo White-Label multitenant (subdomínios de organizadores), o `config/session.php` não define `domain => env('SESSION_DOMAIN')`. Isso pode fazer com que um usuário logado no domínio principal perca a sessão ao navegar para o subdomínio de um organizador.
 3. **[Gravidade Baixa] Padronização de Títulos Restante:**
    - 11 views secundárias ainda mantêm fallbacks `'Laravel'` ou `'IngressosApp'` no `<title>`. Sugere-se aplicar a lista de propostas mapeada no Item 14.
-
+DIOGO
 ---
 
 ## 7. CONCLUSÃO E PRÓXIMOS PASSOS RECOMENDADOS
