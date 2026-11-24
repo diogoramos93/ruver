@@ -762,23 +762,7 @@ class CheckoutController extends Controller
         return view('order-payment', compact('order', 'formaPagamento', 'pixCopiaCola', 'bankSlipUrl'));
     }
 
-    // 6. Confirma o pagamento do pedido
-
-    public function confirmPayment(Order $order)
-
-    {
-
-        if ($order->user_id !== auth()->id()) {
-
-            abort(403, 'Acesso não autorizado ao pedido.');
-        }
-
-        $order->update(['status' => 'pago']);
-
-        return redirect()->route('my.tickets')->with('success', 'Pagamento confirmado com sucesso! Os seus ingressos já estão disponíveis abaixo.');
-    }
-
-    // 7. Retorna o status atual do pedido para o robozinho da tela de pagamento
+    // 6. Retorna o status atual do pedido para o robozinho da tela de pagamento
 
     public function checkStatus(Order $order)
 

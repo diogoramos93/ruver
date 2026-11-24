@@ -238,7 +238,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/pedido/{order}/pagamento', [CheckoutController::class, 'paymentScreen'])->name('order.payment');
-    Route::post('/pedido/{order}/confirmar-pagamento', [CheckoutController::class, 'confirmPayment'])->name('order.confirm_payment');
     Route::get('/pedido/{order}/status', [CheckoutController::class, 'checkStatus'])->name('order.check_status');
 
     // PORTARIA (Exige Login para barrar fraudadores lendo QR Code de penetra)
