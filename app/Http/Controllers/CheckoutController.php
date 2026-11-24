@@ -399,24 +399,43 @@ class CheckoutController extends Controller
 
                     ->first();
 
-                if ($cupom) {
+                if (!$cupom) {
 
-                    if ($cupom->tipo_desconto === 'porcentagem') {
-
-                        $descontoAplicado = $subtotalIngressos * ($cupom->valor_desconto / 100);
-                    } else {
-
-                        $descontoAplicado = $cupom->valor_desconto;
-                    }
-
-                    $descontoAplicado = min($descontoAplicado, $valorGeral);
-
-                    $valorGeral -= $descontoAplicado;
-
-                    // Incrementa o uso do cupom
-
-                    $cupom->increment('quantidade_usada');
+                    throw new \Exception('Cupom inválido ou inativo.');
                 }
+
+                $agora = now();
+
+                if ($cupom->data_inicio && $agora->lt($cupom->data_inicio)) {
+
+                    throw new \Exception('Este cupom ainda não está válido.');
+                }
+
+                if ($cupom->data_termino && $agora->gt($cupom->data_termino)) {
+
+                    throw new \Exception('Este cupom já expirou.');
+                }
+
+                if ($cupom->quantidade_total !== null && $cupom->quantidade_usada >= $cupom->quantidade_total) {
+
+                    throw new \Exception('Este cupom está esgotado.');
+                }
+
+                if ($cupom->tipo_desconto === 'porcentagem') {
+
+                    $descontoAplicado = $subtotalIngressos * ($cupom->valor_desconto / 100);
+                } else {
+
+                    $descontoAplicado = $cupom->valor_desconto;
+                }
+
+                $descontoAplicado = min($descontoAplicado, $valorGeral);
+
+                $valorGeral -= $descontoAplicado;
+
+                // Incrementa o uso do cupom
+
+                $cupom->increment('quantidade_usada');
             }
 
             $primeiroTicketIdKey = array_key_first($selectedTickets);
