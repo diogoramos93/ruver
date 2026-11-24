@@ -32,7 +32,16 @@
     <!-- Favicon Dinâmico (White-Label) -->
     <link rel="icon" type="image/png" href="{{ $brandIcon }}">
 
-    <title>{{ $event->titulo }} - {{ config('app.name', 'IngressosApp') }}</title>
+    <title>{{ $event->titulo }} - {{ config('app.name', 'Ruver') }}</title>
+
+    <!-- Metadados Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $event->titulo }} - {{ config('app.name', 'Ruver') }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($event->descricao ?? ''), 160) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    @if($event->banner || $event->imagem_card)
+        <meta property="og:image" content="{{ asset('storage/' . ($event->banner ?? $event->imagem_card)) }}">
+    @endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>[x-cloak] { display: none !important; } @media (max-width: 1023px) { .ruver-desktop-modal { display: none !important; } }</style>
     <!-- CSS do Leaflet (Para o Mapa) -->
