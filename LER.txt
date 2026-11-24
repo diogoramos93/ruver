@@ -1,0 +1,27 @@
+=========================================================
+COMO LIGAR O ROBÔ DE INGRESSOS NO SERVIDOR (PRODUÇÃO)
+=========================================================
+
+O código do robô já está pronto no sistema. Quando você 
+for colocar o site no ar (Hostinger, cPanel, etc), você 
+só precisa ligar o relógio do servidor (Cron Job) para 
+ele avisar o Laravel a cada minuto.
+
+PASSO A PASSO:
+1. Entre no painel da sua hospedagem.
+2. Procure pela opção chamada "Cron Jobs" ou "Tarefas Agendadas".
+3. Configure para rodar A CADA MINUTO (* * * * *).
+4. No campo do comando, cole a linha abaixo:
+
+cd /caminho/para/seu/projeto && php artisan schedule:run >> /dev/null 2>&1
+
+⚠️ IMPORTANTE: 
+Lembre-se de trocar o "/caminho/para/seu/projeto" pela pasta 
+real onde o seu site foi instalado no servidor (ex: /home/usuario/public_html).
+
+O QUE NÃO FAZER NO SERVIDOR:
+NUNCA rode o comando "php artisan schedule:work" no servidor real. 
+Isso serve apenas para testar no seu computador local.
+
+
+RODAR ISSO  php artisan schedule:work para projeto no computador fora da producao
