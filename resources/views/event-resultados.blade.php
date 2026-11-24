@@ -101,12 +101,12 @@
             </div>
 
             <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-                @if($conteudoWeclex)
+                @if($conteudoWeclex || ($tipoImportacao === 'racetag' && count($atletas) > 0))
                     
                     <!-- Informações Gerais do Evento -->
                     <div class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                        <div><strong class="text-gray-500 block">Organizador:</strong> {{ (string)($conteudoWeclex['organisateur'] ?? 'N/D') }}</div>
-                        <div><strong class="text-gray-500 block">Data da Prova:</strong> {{ (string)($conteudoWeclex['dates'] ?? 'N/D') }}</div>
+                        <div><strong class="text-gray-500 block">Organizador:</strong> {{ (string)($conteudoWeclex['organisateur'] ?? ($event->organizer->nome ?? 'N/D')) }}</div>
+                        <div><strong class="text-gray-500 block">Data da Prova:</strong> {{ (string)($conteudoWeclex['dates'] ?? ($event->data_inicio ? \Carbon\Carbon::parse($event->data_inicio)->format('d/m/Y') : 'N/D')) }}</div>
                         <div><strong class="text-gray-500 block">Status:</strong> Resultados Oficializados</div>
                     </div>
 
