@@ -41,8 +41,18 @@ class CheckinController extends Controller
         }
 
         // 3. Verifica se o documento (CPF ou Passaporte) bate com o QR Code
-        $docBanco = $participant->cpf ?: $participant->passaporte;
-        if ($docBanco !== $documento) {
+        $valido = false;
+        if (!empty($participant->cpf)) {
+            $cpfBanco = preg_replace('/\D/', '', $participant->cpf);
+            $cpfUrl = preg_replace('/\D/', '', $documento);
+            $valido = ($cpfBanco !== '' && $cpfBanco === $cpfUrl);
+        } elseif (!empty($participant->passaporte)) {
+            $passBanco = strtoupper(preg_replace('/[^a-zA-Z0-9]/', '', $participant->passaporte));
+            $passUrl = strtoupper(preg_replace('/[^a-zA-Z0-9]/', '', $documento));
+            $valido = ($passBanco !== '' && $passBanco === $passUrl);
+        }
+
+        if (!$valido) {
             return response("<h1 style='color:red; text-align:center; font-family:sans-serif; margin-top:50px;'>❌ Documento Inválido! Possível Fraude.</h1>", 403);
         }
 
