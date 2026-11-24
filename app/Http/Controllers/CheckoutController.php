@@ -295,13 +295,21 @@ class CheckoutController extends Controller
 
             $totalIngressos = 0;
 
+            $taxaPlataformaTotal = 0;
+
+            $taxaRepassadaAoCliente = 0;
+
             // 👇 INÍCIO DA REGRA DO IDOSO (Cálculo do Carrinho) 👇
+
+            $ticketsModelos = [];
 
             foreach ($selectedTickets as $ticketId => $quantidade) {
 
                 if ($quantidade <= 0) continue;
 
-                $ticket = Ticket::findOrFail($ticketId);
+                $ticket = Ticket::with('event.organizer')->findOrFail($ticketId);
+
+                $ticketsModelos[$ticketId] = $ticket;
 
                 if ($ticket->quantidade_total > 0 && $quantidade > $ticket->quantidade_disponivel) {
 
@@ -311,6 +319,8 @@ class CheckoutController extends Controller
                 $totalIngressos += $quantidade;
 
                 $participantesDaqueleIngresso = $participantesInput[$ticketId] ?? [];
+
+                $organizer = $ticket->event->organizer;
 
                 // Agora iteramos sobre CADA participante para cobrar o valor individual
 
@@ -335,6 +345,20 @@ class CheckoutController extends Controller
                     }
 
                     $subtotalIngressos += $precoFinalParticipante;
+
+                    // Cálculo da taxa por participante deste ingresso
+                    $taxaItem = 0;
+                    if ($organizer->tipo_taxa_plataforma === 'fixo') {
+                        $taxaItem = (float) $organizer->taxa_plataforma;
+                    } else {
+                        $taxaItem = $precoFinalParticipante * ((float) $organizer->taxa_plataforma / 100);
+                    }
+
+                    $taxaPlataformaTotal += $taxaItem;
+
+                    if ($ticket->taxa_organizador !== 'absorver') {
+                        $taxaRepassadaAoCliente += $taxaItem;
+                    }
                 }
             }
 
@@ -345,6 +369,9 @@ class CheckoutController extends Controller
             $totalProdutos = 0;
 
             foreach ($participantesInput as $ticketId => $participantesDoIngresso) {
+
+                $ticket = $ticketsModelos[$ticketId] ?? Ticket::with('event.organizer')->find($ticketId);
+                $organizer = $ticket ? $ticket->event->organizer : null;
 
                 foreach ($participantesDoIngresso as $dadosP) {
 
@@ -360,7 +387,18 @@ class CheckoutController extends Controller
 
                                 $precoBase = $attr->product ? (float) $attr->product->preco_base : 0;
 
-                                $totalProdutos += ($precoAdicional + $precoBase);
+                                $valorProduto = $precoAdicional + $precoBase;
+
+                                $totalProdutos += $valorProduto;
+
+                                if ($organizer && $organizer->tipo_taxa_plataforma !== 'fixo') {
+                                    $taxaProd = $valorProduto * ((float) $organizer->taxa_plataforma / 100);
+                                    $taxaPlataformaTotal += $taxaProd;
+
+                                    if ($ticket && $ticket->taxa_organizador !== 'absorver') {
+                                        $taxaRepassadaAoCliente += $taxaProd;
+                                    }
+                                }
                             }
                         }
                     }
@@ -369,21 +407,13 @@ class CheckoutController extends Controller
 
             // Pega o organizador do primeiro ingresso para calcular a taxa da plataforma
 
-            $primeiroTicket = Ticket::with('event.organizer')->find(array_key_first($selectedTickets));
+            $primeiroTicket = $ticketsModelos[array_key_first($selectedTickets)] ?? Ticket::with('event.organizer')->find(array_key_first($selectedTickets));
 
             $organizer = $primeiroTicket->event->organizer;
 
-            $totalTaxa = 0;
+            $totalTaxa = $taxaPlataformaTotal;
 
-            if ($organizer->tipo_taxa_plataforma === 'fixo') {
-
-                $totalTaxa = $organizer->taxa_plataforma * $totalIngressos;
-            } else {
-
-                $totalTaxa = ($subtotalIngressos + $totalProdutos) * ($organizer->taxa_plataforma / 100);
-            }
-
-            $valorGeral = $subtotalIngressos + $totalProdutos + $totalTaxa;
+            $valorGeral = $subtotalIngressos + $totalProdutos + $taxaRepassadaAoCliente;
 
             // Aplicação de Cupom de Desconto (caso exista)
 
@@ -483,6 +513,8 @@ class CheckoutController extends Controller
                 ];
             }
 
+            $splitTaxa = min((float) $totalTaxa, (float) $order->valor_total);
+
             $pagamentoResultado = $asaasService->createPayment(
 
                 $order,
@@ -501,7 +533,7 @@ class CheckoutController extends Controller
 
                 ],
 
-                $totalTaxa,
+                $splitTaxa,
 
                 $formaPagamento,
 
