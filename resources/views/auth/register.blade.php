@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen flex flex-col bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
 
-    <div class="flex-grow flex items-center justify-center p-4 py-10">
+    <div class="flex-grow flex flex-col items-center justify-center p-4 py-10">
         <!-- Card de Registro -->
         <div class="bg-white rounded-3xl shadow-xl border border-gray-100 w-full max-w-2xl p-8 sm:p-10 relative overflow-hidden">
             
@@ -121,7 +121,7 @@
         </div>
         
         <!-- Rodapé -->
-        <div class="absolute bottom-4 w-full text-center text-xs text-gray-400 font-medium">
+        <div class="mt-8 w-full text-center text-xs text-gray-400 font-medium">
             &copy; {{ date('Y') }} {{ config('app.name', 'Ruver') }}. Todos os direitos reservados.
         </div>
     </div>
