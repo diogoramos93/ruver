@@ -14,14 +14,14 @@ class AsaasPaymentService
 
     public function __construct()
     {
-        $environment = config('services.asaas.env', env('ASAAS_ENV', 'sandbox'));
+        $environment = config('services.asaas.env', 'sandbox');
         
         // URLs já corrigidas para a versão nova da API do Asaas!
         $this->baseUrl = $environment === 'production'
             ? 'https://api.asaas.com/v3'
             : 'https://api-sandbox.asaas.com/v3';
 
-        $this->masterWalletId = config('services.asaas.master_wallet_id', env('ASAAS_MASTER_WALLET_ID'));
+        $this->masterWalletId = config('services.asaas.master_wallet_id');
     }
 
     /**
@@ -29,7 +29,7 @@ class AsaasPaymentService
      */
     public function getOrCreateCustomer(Organizer $organizer, string $name, string $cpfCnpj, string $email): ?string
     {
-        $apiKey = $organizer->asaas_api_key ?: env('ASAAS_MASTER_API_KEY');
+        $apiKey = $organizer->asaas_api_key ?: config('services.asaas.master_api_key');
         if (empty($apiKey)) {
             return null;
         }
@@ -85,7 +85,7 @@ class AsaasPaymentService
      */
     public function createPayment(Order $order, Organizer $organizer, array $customerData, float $valorTaxaPlataforma, string $billingType = 'PIX', array $creditCardData = []): array
     {
-        $apiKey = $organizer->asaas_api_key ?: env('ASAAS_MASTER_API_KEY');
+        $apiKey = $organizer->asaas_api_key ?: config('services.asaas.master_api_key');
 
         if (empty($apiKey)) {
             return $this->generateSimulationPixResponse($order);

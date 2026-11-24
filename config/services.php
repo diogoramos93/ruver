@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'asaas' => [
+        'env' => env('ASAAS_ENV', 'sandbox'),
+        'master_api_key' => env('ASAAS_MASTER_API_KEY'),
+        'master_wallet_id' => env('ASAAS_MASTER_WALLET_ID'),
+    ],
+
 ];
