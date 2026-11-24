@@ -29,8 +29,6 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <!-- Alpine.js para o Carrossel funcionar de forma fluida -->
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body class="bg-white text-gray-900 font-sans antialiased flex flex-col min-h-screen">
 
