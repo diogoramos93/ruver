@@ -30,7 +30,6 @@ RODAR ISSO  php artisan schedule:work para projeto no computador fora da produca
 No VS Code (seu Mac)
 Faça suas alterações e teste o sistema.
 Envie para o GitHub
-
 git add .
 git commit -m "Atualizacao do sistema"
 git push origin main
