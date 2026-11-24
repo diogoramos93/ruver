@@ -43,3 +43,4 @@ php artisan optimize:clear
 
 Confira o site
 Acesse o RUVER e verifique se a alteração apareceu corretamente.
+-----------------//------
