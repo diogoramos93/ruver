@@ -25,3 +25,22 @@ Isso serve apenas para testar no seu computador local.
 
 
 RODAR ISSO  php artisan schedule:work para projeto no computador fora da producao
+
+
+No VS Code (seu Mac)
+Faça suas alterações e teste o sistema.
+Envie para o GitHub
+
+git add .
+git commit -m "Atualizacao do sistema"
+git push origin main
+
+No servidor de produção
+cd /www/wwwroot/diogoramos.esp.br/93
+git pull origin main
+
+Atualize o Laravel
+php artisan optimize:clear
+
+Confira o site
+Acesse o RUVER e verifique se a alteração apareceu corretamente.
