@@ -223,7 +223,7 @@
 
     <script type="text/javascript">
         new QRCode(document.getElementById("qrcode"), {
-            text: "{{ url('/') }}/{{ $participant->id }}/{{ $participant->cpf ?: $participant->passaporte }}",
+            text: "{{ route('checkin.validar', ['id' => $participant->id, 'documento' => $participant->cpf ?: $participant->passaporte]) }}",
             width: 140, /* Reduzi levemente o QR Code para garantir espaço na página */
             height: 140,
             colorDark : "#000000",
